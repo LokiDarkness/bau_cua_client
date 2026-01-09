@@ -1,16 +1,75 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="vi">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+
+    <!-- Viewport cho mobile -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
     <title>Bầu Cua Cloud</title>
-    <!-- Tailwind Play CDN (quick prototype) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="manifest" href="/manifest.json" />
+
+    <!-- SEO cơ bản -->
+    <meta name="description" content="Bầu Cua Cloud – chơi bầu cua online realtime" />
     <meta name="theme-color" content="#dc2626" />
+
+    <!-- ICON -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- PWA (có thể dùng sau) -->
+    <!--
+    <link rel="manifest" href="/manifest.json" />
+    -->
+
+    <!-- Tailwind CSS (Play CDN – dùng cho prototype / prod nhẹ) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tuỳ chỉnh Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              casinoRed: '#dc2626',
+              casinoGold: '#facc15',
+              tableGreen: '#14532d'
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Font (tuỳ chọn) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+          'Segoe UI', sans-serif;
+        background-color: #f5f5f5;
+      }
+
+      #root {
+        height: 100%;
+      }
+    </style>
   </head>
-  <body class="bg-neutral-50">
+
+  <body>
+    <!-- ROOT REACT -->
     <div id="root"></div>
+
+    <!-- MAIN ENTRY (VITE) -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
