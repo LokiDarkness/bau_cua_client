@@ -23,7 +23,8 @@ export default function App(){
   const [room,setRoom]=useState(null)
   const [dice,setDice]=useState(null)
   const [rolling,setRolling]=useState(false)
-
+  const [betLock, setBetLock] = useState(false)
+  
   useEffect(()=>{
     socket.emit('lobby:getRooms',setRooms)
     socket.on('lobby:update',setRooms)
@@ -60,9 +61,22 @@ export default function App(){
   function joinRoom(id){
     socket.emit('lobby:joinRoom',{ roomId:id, name:ensureName() })
   }
-  function placeBet(s){
-    socket.emit('room:placeBet',{ roomId:room.id, slot:s, amount:100 })
+  function placeBet(slot){
+    if (!room || room.state !== 'betting') return
+    if (betLock) return
+
+    setBetLock(true)
+
+    socket.emit(
+      'room:placeBet',
+      { roomId: room.id, slot, amount: 100 },
+      () => {
+        // mở khóa sau 150ms
+        setTimeout(() => setBetLock(false), 150)
+      }
+    )
   }
+
   function startRoll(){
     socket.emit('room:startRoll',{ roomId:room.id })
   }
