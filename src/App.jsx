@@ -1,12 +1,17 @@
-import React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
 
-const socket = io(import.meta.env.VITE_SERVER_URL)
+/* ================= SOCKET (TẠO 1 LẦN DUY NHẤT) ================= */
+const socket = io(import.meta.env.VITE_SERVER_URL, {
+  transports: ['websocket'],
+  reconnection: true,
+})
 
+/* ================= CONST ================= */
 const SLOTS = ['bau','cua','tom','ca','ga','nai']
 const LABEL = { bau:'Bầu', cua:'Cua', tom:'Tôm', ca:'Cá', ga:'Gà', nai:'Nai' }
 
+/* ================= APP ================= */
 export default function App(){
   const [view, setView] = useState('lobby')
   const [name, setName] = useState(localStorage.getItem('name') || '')
@@ -25,25 +30,33 @@ export default function App(){
   const [chips, setChips] = useState([])
   const slotRefs = useRef({})
 
+  /* ================= SOCKET EVENTS ================= */
   useEffect(() => {
+    console.log('socket connected:', socket.connected)
+
+    socket.on('connect', () => {
+      console.log('✅ socket connected:', socket.id)
+    })
+
     socket.emit('lobby:getRooms', setRooms)
     socket.on('lobby:update', setRooms)
 
     socket.on('room:update', r => {
       setRoom(r)
+      setView('room')
+
       if (r.state === 'rolling') setRollingDice(true)
       if (r.state === 'betting') {
         setRollingDice(false)
         setDice(null)
       }
-      setView('room')
     })
 
     socket.on('room:rolled', ({ dice, room }) => {
       setDice(dice)
       setRoom(room)
 
-      // CHIP THẮNG BAY VỀ HUD
+      // chip thắng bay về HUD
       const me = room.players.find(p => p.id === socket.id)
       if (me){
         const hud = document.getElementById('chipHud')
@@ -67,9 +80,10 @@ export default function App(){
       setChat(c => [...c, msg])
     })
 
-    return () => socket.off()
+    return () => socket.removeAllListeners()
   }, [])
 
+  /* ================= HELPERS ================= */
   function ensureName(){
     if (!name){
       const n = 'Player' + Math.floor(Math.random()*9000)
@@ -85,12 +99,12 @@ export default function App(){
     return room?.players.find(p => p.id === socket.id)
   }
 
-  // ===== ACTIONS =====
+  /* ================= ACTIONS ================= */
+
+  // 🔥 FIX QUAN TRỌNG: KHÔNG JOIN LẠI SAU KHI CREATE
   function createRoom(){
     const n = ensureName()
-    socket.emit('lobby:createRoom', { name: 'Bàn của ' + n }, id => {
-      socket.emit('lobby:joinRoom', { roomId: id, name: n })
-    })
+    socket.emit('lobby:createRoom', { name: 'Bàn của ' + n })
   }
 
   function joinRoom(id){
@@ -101,7 +115,6 @@ export default function App(){
     if (room.state !== 'betting') return
     if (myPlayer()?.chips <= 0) return alert('Hết chip')
 
-    // CHIP BAY TỪ Ô CƯỢC
     const el = slotRefs.current[slot]
     if (el){
       const r = el.getBoundingClientRect()
@@ -117,7 +130,11 @@ export default function App(){
       ]))
     }
 
-    socket.emit('room:placeBet', { roomId: room.id, slot, amount: 100 })
+    socket.emit('room:placeBet', {
+      roomId: room.id,
+      slot,
+      amount: 100
+    })
   }
 
   function startRoll(){
@@ -127,16 +144,23 @@ export default function App(){
   function grantChips(id){
     const amt = parseInt(prompt('Cấp chip', '1000'))
     if (!amt) return
-    socket.emit('room:grantChips', { roomId: room.id, targetId:id, amount:amt })
+    socket.emit('room:grantChips', {
+      roomId: room.id,
+      targetId: id,
+      amount: amt
+    })
   }
 
   function sendChat(){
     if (!chatText.trim()) return
-    socket.emit('room:chat', { roomId: room.id, text: chatText })
+    socket.emit('room:chat', {
+      roomId: room.id,
+      text: chatText
+    })
     setChatText('')
   }
 
-  // ===== LOBBY =====
+  /* ================= LOBBY ================= */
   if (view === 'lobby'){
     return (
       <div className="min-h-screen bg-gray-100 p-4">
@@ -149,7 +173,10 @@ export default function App(){
             onChange={e=>setName(e.target.value)}
             placeholder="Tên bạn"
           />
-          <button onClick={createRoom} className="bg-red-600 text-white px-4 rounded">
+          <button
+            onClick={createRoom}
+            className="bg-red-600 text-white px-4 rounded"
+          >
             Tạo
           </button>
         </div>
@@ -176,7 +203,7 @@ export default function App(){
 
   if (!room) return null
 
-  // ===== ROOM =====
+  /* ================= ROOM ================= */
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* TOP BAR */}
@@ -289,7 +316,10 @@ export default function App(){
               onChange={e=>setChatText(e.target.value)}
               onKeyDown={e=>e.key==='Enter' && sendChat()}
             />
-            <button onClick={sendChat} className="bg-blue-600 text-white px-3 rounded">
+            <button
+              onClick={sendChat}
+              className="bg-blue-600 text-white px-3 rounded"
+            >
               Gửi
             </button>
           </div>
