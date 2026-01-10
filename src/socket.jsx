@@ -7,8 +7,8 @@ if (!playerId){
 }
 
 export const socket = io(import.meta.env.VITE_SERVER_URL, {
-  transports: ['websocket'],
-  auth: { playerId }
+  transports:['websocket'],
+  auth:{ playerId }
 })
 
 export { playerId }
