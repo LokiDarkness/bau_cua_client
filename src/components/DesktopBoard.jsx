@@ -19,7 +19,11 @@ export default function DesktopBoard({ room, onBet }) {
             disabled:opacity-40
           "
         >
-          <div>{LABEL[s]}</div>
+          <img
+            src={SLOT_ICONS[s]}
+            alt={s}
+            className="w-16 h-16"
+          />
           <div className="text-sm mt-2">
             Tổng {room.totals[s]}
           </div>
