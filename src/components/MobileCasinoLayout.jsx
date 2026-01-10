@@ -4,7 +4,7 @@ import BettingBoard from './BettingBoard'
 import RollButton from './RollButton'
 import ChatButton from './ChatButton'
 import ChatSheet from './ChatSheet'
-import { socket } from './socket'
+import { socket } from '../socket'
 
 export default function MobileCasinoLayout({
   room,dice,rolling,playerId,onBet,onRoll,chat,onSendChat
