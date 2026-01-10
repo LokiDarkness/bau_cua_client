@@ -1,3 +1,4 @@
+import { SLOT_ICONS } from '../constants/icons'
 const SLOTS = ['bau', 'cua', 'tom', 'ca', 'ga', 'nai']
 const LABEL = {
   bau: 'BẦU',
@@ -24,10 +25,12 @@ export default function BettingBoard({ room, onBet }) {
             disabled:opacity-50
           "
         >
-          <span className="font-extrabold text-lg">
-            {LABEL[s]}
-          </span>
-          <span className="text-xs text-gray-600 mt-1">
+          <img
+            src={SLOT_ICONS[s]}
+            alt={s}
+            className="w-12 h-12 mb-1"
+          />
+          <span className="text-xs text-gray-600">
             Tổng {room.totals[s]}
           </span>
         </button>
