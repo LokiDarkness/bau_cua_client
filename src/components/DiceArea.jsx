@@ -1,4 +1,4 @@
-import { SLOT_ICONS } from './constants/icons'
+import { SLOT_ICONS } from '../constants/icons'
 
 export default function DiceArea({ rolling, dice }) {
   return (
