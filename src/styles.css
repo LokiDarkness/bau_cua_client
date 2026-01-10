@@ -57,3 +57,14 @@ html, body, #root {
 .win-slot {
   animation: slot-win 0.8s infinite;
 }
+
+/* kết quả xúc xắc */
+@keyframes dice-result {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.animate-dice-result {
+  animation: dice-result 0.35s ease-out;
+}
