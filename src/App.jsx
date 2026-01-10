@@ -1,6 +1,6 @@
-import DiceArea from '../components/DiceArea'
-import Board from '../components/Board'
-import { socket, playerId } from '../socket'
+import DiceArea from './components/DiceArea'
+import Board from './components/Board'
+import { socket, playerId } from './socket'
 
 export default function PcLayout({ room, dice, rolling, winSlots, slotRefs }){
   return (
