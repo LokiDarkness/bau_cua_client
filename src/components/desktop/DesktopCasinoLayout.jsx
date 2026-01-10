@@ -1,8 +1,8 @@
 import DiceArea from '../DiceArea'
 import BettingBoard from '../BettingBoard'
 import RollButton from '../RollButton'
-import DesktopChat from './DesktopChat'
-import PlayerList from './PlayerList'
+import DesktopChat from '../DesktopChat'
+import PlayerList from '../PlayerList'
 
 export default function DesktopCasinoLayout({
   room,dice,rolling,playerId,onBet,onRoll,chat,onSendChat
