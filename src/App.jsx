@@ -1,4 +1,4 @@
-import DiceArea from '../components/DiceArea'
+import DiceArea from './components/DiceArea'
 import Board from '../components/Board'
 import { socket, playerId } from '../socket'
 
